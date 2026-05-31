@@ -150,7 +150,7 @@ export default function App() {
               <div className="relative aspect-video rounded-3xl overflow-hidden glass p-3 border-gold/30 shadow-2xl">
                 <iframe
                   className="w-full h-full rounded-2xl"
-                  src="https://www.youtube.com/embed/TZGWNH-iaHk"
+                  src="https://www.youtube.com/embed/C-jhcXRiR2w"
                   title="Amrita Amaravati Campus Tour Video"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
