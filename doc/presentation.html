@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Compass 2026 - Interactive Presentation</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --color-maroon: #8B1538;
+      --color-gold: #F5C451;
+      --color-indigo: #6366f1;
+      --font-sans: 'Inter', sans-serif;
+      --font-title: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b0f19;
+      color: #f8fafc;
+      font-family: var(--font-sans);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-col: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    /* Soft Animated Background Light Blobs */
+    .bg-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .blob-1 {
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: var(--color-maroon);
+      animation: float-blob 20s infinite alternate;
+    }
+    .blob-2 {
+      bottom: -10%;
+      right: -10%;
+      width: 40vw;
+      height: 40vw;
+      background: var(--color-gold);
+      animation: float-blob 25s infinite alternate-reverse;
+    }
+    @keyframes float-blob {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, -50px) scale(1.1); }
+    }
+
+    /* Presentation Wrapper */
+    .deck-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      height: 85vh;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      max-width: 960px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 32px;
+      padding: 3rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: scale(0.95) translateY(20px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 540px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    /* Typography & Header styling */
+    h1, h2, h3, h4 {
+      font-family: var(--font-title);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--color-gold);
+      margin-bottom: 1rem;
+    }
+
+    .slide-title {
+      font-size: 2.5rem;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .gradient-title {
+      background: linear-gradient(135deg, #fff 30%, var(--color-gold) 70%, var(--color-maroon) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-body {
+      font-size: 1rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .slide-footer {
+      border-t: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* Grid & Flex layouts for specific slides */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .bullet-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .bullet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-weight: 500;
+    }
+    .bullet-list li strong {
+      color: #fff;
+    }
+    .bullet-icon {
+      color: var(--color-gold);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .deck-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .deck-card:hover {
+      border-color: var(--color-gold);
+    }
+    .card-icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-title {
+      font-weight: 800;
+      color: #fff;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    .card-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    /* Footer Navigation Panel */
+    .controls-panel {
+      background: rgba(15, 23, 42, 0.8);
+      border-t: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+    .nav-btn:hover {
+      background: var(--color-maroon);
+      border-color: var(--color-maroon);
+      transform: translateY(-1px);
+    }
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .progress-bar-container {
+      flex-grow: 1;
+      max-width: 300px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin: 0 2rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-maroon) 0%, var(--color-gold) 100%);
+      width: 20%;
+      transition: width 0.3s;
+    }
+
+    .slide-counter {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body class="flex flex-col">
+
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+
+  <!-- Slides Deck -->
+  <div class="deck-container">
+    
+    <!-- Slide 1: Cover -->
+    <div class="slide active" id="slide-1">
+      <div class="slide-badge">🧭 Project Showcase</div>
+      <div class="grid-2" style="flex-grow:1; align-items:center;">
+        <div>
+          <h1 class="slide-title gradient-title" style="font-size: 3.25rem;">Campus Compass<br><span style="font-size: 2.75rem; color:#fff;">Class of 2026</span></h1>
+          <p style="color:#94a3b8; font-size:1.1rem; line-height:1.6; margin-bottom:1.5rem;">
+            A next-generation, premium 3D spatial UI/UX orientation guide crafted specifically for the incoming freshman batch of Amrita Amaravati.
+          </p>
+          <div style="font-size:0.8rem; font-weight:700; color:var(--color-gold); letter-spacing:0.05em;">
+            ⚙️ Built with React 19 • Vite • TS • Tailwind CSS • Motion
+          </div>
+        </div>
+        <div style="text-align: center; font-size: 8rem; animation: float 4s ease-in-out infinite;">
+          🧭
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Amrita Vishwa Vidyapeetham</span>
+        <span>Slide 1 of 5</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide" id="slide-2">
+      <div class="slide-badge">⚠️ The Challenge</div>
+      <div class="grid-2" style="flex-grow:1; align-items:start; margin-top:1rem;">
+        <div>
+          <h2 class="slide-title" style="font-size: 2.25rem; color:#fff;">The Freshman Orientation Gap</h2>
+          <p class="slide-body" style="font-size:0.95rem;">
+            Entering university is one of the most exciting yet overwhelming phases in a student's life. Freshers face severe informational bottlenecks that hinder their early academic performance and campus adjustments:
+          </p>
+        </div>
+        <div>
+          <ul class="bullet-list" style="font-size: 0.9rem;">
+            <li>
+              <span class="bullet-icon">✕</span>
+              <div>
+                <strong>Overwhelming Rules:</strong> Strict 75% attendance policy and Continuous Internal Assessments (CIA) are poorly understood from Day 1.
+              </div>
+            </li>
+            <li>
+              <span class="bullet-icon">✕</span>
+              <div>
+                <strong>Scattered Portals:</strong> Academic details, syllabus blueprints, and campus layouts are spread across fragmented systems.
+              </div>
+            </li>
+            <li>
+              <span class="bullet-icon">✕</span>
+              <div>
+                <strong>Social Adjustment Gaps:</strong> Settle-in routines, transport logistics, and technical student chapters (Chakravyuha) lack centralized discovery.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>The Problem Statement</span>
+        <span>Slide 2 of 5</span>
+      </div>
+    </div>
+
+    <!-- Slide 3: The Solution -->
+    <div class="slide" id="slide-3">
+      <div class="slide-badge">✨ The Solution</div>
+      <div class="grid-2" style="flex-grow:1; align-items:center;">
+        <div style="text-align: center; font-size: 8rem; animation: pulse 2s infinite alternate;">
+          🚀
+        </div>
+        <div>
+          <h2 class="slide-title" style="font-size: 2.25rem; color:#fff;">Campus Compass 2026</h2>
+          <p class="slide-body" style="font-size:0.95rem; margin-bottom:1.25rem;">
+            A digitized, gorgeous, single-page orientation engine packed with premium UX elements to align coordinates, remove ambiguities, and empower B.Tech freshers:
+          </p>
+          <ul class="bullet-list" style="font-size: 0.85rem;">
+            <li>
+              <span class="bullet-icon">✓</span>
+              <div><strong>Bento Directional Guide:</strong> North (Academics), East (Clubs), South (Campus Life), West (Placements).</div>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <div><strong>Interactive Simulations:</strong> Real-time SGPA calculator and interactive campus maps.</div>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <div><strong>Survival Kit Checklist:</strong> Structured freshman checklists detailing mess timings, transit, and seniors networking.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>The Innovation Blueprint</span>
+        <span>Slide 3 of 5</span>
+      </div>
+    </div>
+
+    <!-- Slide 4: Core Premium Features -->
+    <div class="slide" id="slide-4">
+      <div class="slide-badge">💎 Premium Features</div>
+      <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; gap:1.5rem;">
+        <h2 class="slide-title" style="font-size: 2.25rem; color:#fff; margin-bottom:0;">High-Fidelity Interaction Suite</h2>
+        <div class="card-row">
+          <div class="deck-card">
+            <div class="card-icon">🎛️</div>
+            <div class="card-title">3D Interactive Compass</div>
+            <div class="card-desc">Tilting gyro compass rose displaying dynamic orientation portals dynamically.</div>
+          </div>
+          <div class="deck-card">
+            <div class="card-icon">💧</div>
+            <div class="card-title">Realistic Glass Drops</div>
+            <div class="card-desc">Convex glass water drops with inner-shadow overlays and hover micro-animations.</div>
+          </div>
+          <div class="deck-card">
+            <div class="card-icon">🎵</div>
+            <div class="card-title">Nostalgic Audio Player</div>
+            <div class="card-desc">Spinning vinyl record player with active HTML5 wave visualizers and synced API controllers.</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Interactive Systems Overview</span>
+        <span>Slide 4 of 5</span>
+      </div>
+    </div>
+
+    <!-- Slide 5: Technical Stack & Vercel Cloud -->
+    <div class="slide" id="slide-5">
+      <div class="slide-badge">⚡ Architecture & Hosting</div>
+      <div class="grid-2" style="flex-grow:1; align-items:center;">
+        <div>
+          <h2 class="slide-title" style="font-size: 2.25rem; color:#fff;">Production-Grade Architecture</h2>
+          <p class="slide-body" style="font-size:0.95rem; margin-bottom:1rem;">
+            Built with modular frameworks, compiled in strict type safety, and optimized for speed:
+          </p>
+          <ul class="bullet-list" style="font-size: 0.85rem;">
+            <li>
+              <span class="bullet-icon">❖</span>
+              <div><strong>Core Engine:</strong> React 19, TypeScript, and Vite. Builds in 4.5 seconds with zero compiler errors.</div>
+            </li>
+            <li>
+              <span class="bullet-icon">❖</span>
+              <div><strong>Responsive Layouts:</strong> Dynamic media size hooks, responsive bento reflows, and non-overlapping floating widgets.</div>
+            </li>
+            <li>
+              <span class="bullet-icon">❖</span>
+              <div><strong>Vercel Ready:</strong> Optimized for edge server delivery with direct routing configurations and instant branch preview builds.</div>
+            </li>
+          </ul>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 24px; text-align: center;">
+          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">☁️</div>
+          <div style="font-weight:900; color:#fff; font-size: 1.25rem;">Vercel Edge Cloud</div>
+          <div style="color:var(--color-gold); font-size:0.8rem; font-weight:700; margin-top:0.25rem;">🚀 Deployment Live & Fully Scalable</div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Vercel Cloud & Production Architecture</span>
+        <span>Slide 5 of 5</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation Panel -->
+  <div class="controls-panel">
+    <button class="nav-btn" id="prev-btn" disabled>
+      ← Previous
+    </button>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <div class="slide-counter">
+      Slide <span id="current-index-display">1</span> of 5
+    </div>
+    <button class="nav-btn" id="next-btn">
+      Next →
+    </button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressFill = document.getElementById('progress-fill');
+    const currentIndexDisplay = document.getElementById('current-index-display');
+    
+    let currentIndex = 0;
+
+    function updateDeck() {
+      // Update Slide visibility
+      slides.forEach((slide, index) => {
+        if (index === currentIndex) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update progress bar & displays
+      const progress = ((currentIndex + 1) / slides.length) * 100;
+      progressFill.style.width = `${progress}%`;
+      currentIndexDisplay.textContent = currentIndex + 1;
+
+      // Update button states
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === slides.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateDeck();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        updateDeck();
+      }
+    });
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        if (currentIndex < slides.length - 1) {
+          currentIndex++;
+          updateDeck();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateDeck();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
